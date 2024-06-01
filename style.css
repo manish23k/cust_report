@@ -1,0 +1,45 @@
+/* Custom styles for the navigation bar */
+.navbar {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px;
+}
+
+.navbar-brand {
+    text-decoration: none;
+}
+
+.navbar-nav {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.nav-item {
+    margin: 0 10px;
+}
+
+.nav-link {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+/* Custom styles for the container */
+.container {
+    padding: 20px;
+    background-color: #f8f8f8;
+}
+
+/* Custom styles for buttons */
+.btn {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}

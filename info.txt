@@ -1,0 +1,260 @@
+VICIDIAL AGENT INTERFACE BUTTON REMOVE 
+
+/agc/vicidial.php
+
+Buttons:-
+CUSTOM TRANSFER ---CODE  LINE:- 22383
+TRANFER - CONF  --- CODE LINE:- 22377
+WEB FORM2       --- Enable Second Webform: 0 (System Setting)
+
+
+_______________________________________________________
+
+VARhttp://192.168.0.201/report/popup.php?phonenumber=--A--phone_number--B--&applicationNo=--A--address1--B--&agent=--A--user--B--&rec_id=--A--recording_id--B--&lead_id=--A--lead_id--B--
+
+
+
+http://192.168.0.201/guj/binkheti_form.php?phonenumber=9227231501&agent=manish&rec_id=5
+
+
+TABLE for upload excel data
+
+CREATE TABLE `excel_data` (
+  `ID` int(11) NOT NULL,
+  `application_no` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `district` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `taluka` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `village` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `survey_no` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `name_of_applicant` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `type_of_application` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `date_of_application` date DEFAULT NULL,
+  `date_of_disposal` date DEFAULT NULL,
+  `mobile_number` varchar(15) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+ALTER TABLE `excel_data`
+  ADD PRIMARY KEY (`ID`);
+
+  ALTER TABLE `excel_data`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+COMMIT;
+
+  ----------------------------------------------
+
+
+
+--
+-- Table structure for table `varsayi_form_data`
+--
+
+CREATE TABLE `varsayi_form_data` (
+  `id` int(11) NOT NULL,
+  `agent` varchar(255) DEFAULT NULL,
+  `phonenumber` varchar(15) DEFAULT NULL,
+  `lead_id` int(15) NOT NULL,
+  `rec_id` varchar(50) DEFAULT NULL,
+  `type_of_application` varchar(255) DEFAULT NULL,
+  `application_no` varchar(50) DEFAULT NULL,
+  `application_date` date DEFAULT NULL,
+  `disposal_date` date DEFAULT NULL,
+  `applicant_name` varchar(255) DEFAULT NULL,
+  `applicant_location` varchar(255) DEFAULT NULL,
+  `applicant_taluko` varchar(255) DEFAULT NULL,
+  `applicant_jilla` varchar(255) DEFAULT NULL,
+  `varsayi_application_2` varchar(255) DEFAULT NULL,
+  `varsayi_application_3` varchar(255) DEFAULT NULL,
+  `varsayi_application_3_1` varchar(255) DEFAULT NULL,
+  `varsayi_difficulty_4` varchar(255) DEFAULT NULL,
+  `varsayi_multiple_selection_4` varchar(255) DEFAULT NULL,
+  `varsayi_application_5` varchar(255) DEFAULT NULL,
+  `varsayi_application_reason_5` varchar(255) DEFAULT NULL,
+  `varsayi_application_response_6` varchar(255) DEFAULT NULL,
+  `varsayi_office_selection_6` varchar(255) DEFAULT NULL,
+  `varsayi_nikal_mangani` varchar(255) DEFAULT NULL,
+  `varsayi_nikal_mangani_by_7` varchar(255) DEFAULT NULL,
+  `varsayi_service_confirmation` varchar(255) DEFAULT NULL,
+  `star_rating` int(11) DEFAULT NULL,
+  `suggestion` text DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+
+-- Indexes for table `varsayi_form_data`
+--
+ALTER TABLE `varsayi_form_data`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for table `varsayi_form_data`
+--
+ALTER TABLE `varsayi_form_data`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+COMMIT;
+
+
+
+-----------------------------------------------------------
+
+
+
+--
+-- Table structure for table `binkheti_form_data`
+--
+
+CREATE TABLE `binkheti_form_data` (
+  `id` int(11) NOT NULL,
+  `agent` varchar(255) DEFAULT NULL,
+  `phonenumber` varchar(15) DEFAULT NULL,
+  `lead_id` int(15) NOT NULL,
+  `rec_id` int(11) DEFAULT NULL,
+  `type_of_application` varchar(255) DEFAULT NULL,
+  `application_no` varchar(255) DEFAULT NULL,
+  `application_date` date DEFAULT NULL,
+  `disposal_date` date DEFAULT NULL,
+  `applicant_name` varchar(255) DEFAULT NULL,
+  `applicant_location` varchar(255) DEFAULT NULL,
+  `applicant_taluko` varchar(255) DEFAULT NULL,
+  `applicant_jilla` varchar(255) DEFAULT NULL,
+  `iora_application_2` varchar(255) DEFAULT NULL,
+  `iora_application_3` varchar(255) DEFAULT NULL,
+  `iora_application_3_1` varchar(255) DEFAULT NULL,
+  `iora_difficulty_4` varchar(255) DEFAULT NULL,
+  `iora_multiple_selection_4` varchar(255) DEFAULT NULL,
+  `iora_application_5` varchar(255) DEFAULT NULL,
+  `iora_application_reason_5` varchar(255) DEFAULT NULL,
+  `iora_application_response_6` varchar(255) DEFAULT NULL,
+  `iora_office_selection_6` varchar(255) DEFAULT NULL,
+  `nikal_mangani` varchar(255) DEFAULT NULL,
+  `nikal_mangani_by_7` varchar(255) DEFAULT NULL,
+  `iora_difficulty_8` varchar(255) DEFAULT NULL,
+  `iora_application_8` varchar(255) DEFAULT NULL,
+  `phone_verification_8_1` varchar(255) DEFAULT NULL,
+  `phone_verification_option_8_1` varchar(255) DEFAULT NULL,
+  `star_rating` int(11) DEFAULT NULL,
+  `additional_comments` text DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+
+--
+-- Indexes for table `binkheti_form_data`
+--
+ALTER TABLE `binkheti_form_data`
+  ADD PRIMARY KEY (`id`);
+
+
+
+--
+-- AUTO_INCREMENT for table `binkheti_form_data`
+--
+ALTER TABLE `binkheti_form_data`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+COMMIT;
+
+
+-----------------------------------------------------------------------
+
+
+--
+-- Table structure for table `hayati_form_data`
+--
+
+CREATE TABLE `hayati_form_data` (
+  `id` int(11) NOT NULL,
+  `agent` varchar(255) DEFAULT NULL,
+  `phonenumber` varchar(15) DEFAULT NULL,
+  `lead_id` int(15) NOT NULL,
+  `rec_id` varchar(50) DEFAULT NULL,
+  `type_of_application` varchar(255) DEFAULT NULL,
+  `application_no` varchar(50) DEFAULT NULL,
+  `application_date` date DEFAULT NULL,
+  `disposal_date` date DEFAULT NULL,
+  `applicant_name` varchar(255) DEFAULT NULL,
+  `applicant_location` varchar(255) DEFAULT NULL,
+  `applicant_taluko` varchar(255) DEFAULT NULL,
+  `applicant_jilla` varchar(255) DEFAULT NULL,
+  `hayati_application_2` varchar(255) DEFAULT NULL,
+  `hayati_application_3` varchar(255) DEFAULT NULL,
+  `hayati_application_3_1` varchar(255) DEFAULT NULL,
+  `hayati_difficulty_4` varchar(255) DEFAULT NULL,
+  `hayati_multiple_selection_4` varchar(255) DEFAULT NULL,
+  `hayati_application_5` varchar(255) DEFAULT NULL,
+  `hayati_application_reason_5` varchar(255) DEFAULT NULL,
+  `hayati_application_response_6` varchar(255) DEFAULT NULL,
+  `hayati_office_selection_6` varchar(255) DEFAULT NULL,
+  `nikal_mangani` varchar(255) DEFAULT NULL,
+  `nikal_mangani_by_7` varchar(255) DEFAULT NULL,
+  `service_confirmation` varchar(255) DEFAULT NULL,
+  `star_rating` int(11) DEFAULT NULL,
+  `suggestion` text DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+
+
+--
+-- Indexes for table `hayati_form_data`
+--
+ALTER TABLE `hayati_form_data`
+  ADD PRIMARY KEY (`id`);
+
+
+--
+-- AUTO_INCREMENT for table `hayati_form_data`
+--
+ALTER TABLE `hayati_form_data`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+COMMIT;
+
+
+
+------------------------------------------------------------------
+
+
+--
+-- Table structure for table `khedut_form_data`
+--
+
+CREATE TABLE `khedut_form_data` (
+  `id` int(11) NOT NULL,
+  `agent` varchar(255) DEFAULT NULL,
+  `phonenumber` varchar(15) DEFAULT NULL,
+  `lead_id` int(15) NOT NULL,
+  `rec_id` varchar(50) DEFAULT NULL,
+  `type_of_application` varchar(255) DEFAULT NULL,
+  `application_no` varchar(50) DEFAULT NULL,
+  `application_date` date DEFAULT NULL,
+  `disposal_date` date DEFAULT NULL,
+  `applicant_name` varchar(255) DEFAULT NULL,
+  `applicant_location` varchar(255) DEFAULT NULL,
+  `applicant_taluko` varchar(255) DEFAULT NULL,
+  `applicant_jilla` varchar(255) DEFAULT NULL,
+  `khedut_application_2` varchar(255) DEFAULT NULL,
+  `khedut_application_3` varchar(255) DEFAULT NULL,
+  `khedut_application_3_1` varchar(255) DEFAULT NULL,
+  `khedut_application_3_2` varchar(255) DEFAULT NULL,
+  `khedut_application_fee_3_2` decimal(10,2) DEFAULT NULL,
+  `khedut_difficulty_4` varchar(255) DEFAULT NULL,
+  `khedut_multiple_selection_4` varchar(255) DEFAULT NULL,
+  `khedut_application_5` varchar(255) DEFAULT NULL,
+  `khedut_application_reason_5` varchar(255) DEFAULT NULL,
+  `khedut_application_response_6` varchar(255) DEFAULT NULL,
+  `khedut_office_selection_6` varchar(255) DEFAULT NULL,
+  `khedut_nikal_mangani` varchar(255) DEFAULT NULL,
+  `khedut_nikal_mangani_by_7` varchar(255) DEFAULT NULL,
+  `khedut_kharai_praman` varchar(255) DEFAULT NULL,
+  `khedut_kharai_praman_by_8` varchar(255) DEFAULT NULL,
+  `star_rating` int(11) DEFAULT NULL,
+  `suggestion` text DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+--
+-- Indexes for table `khedut_form_data`
+--
+ALTER TABLE `khedut_form_data`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for table `khedut_form_data`
+--
+ALTER TABLE `khedut_form_data`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+COMMIT;
