@@ -1,6 +1,8 @@
 <?php
 session_start(); // Start the session on each page
 
+$title = 'Outgoing Call Statistics';
+
 include "config.php"; // Include the database configuration
 include "header.php";
 
@@ -173,7 +175,11 @@ function getStatusNameById($statusId, $mysqli)
     }
 
     $row = $resultStatusName->fetch_assoc();
-    return $row['status_name'];
+    $status = '';
+    if (isset($row['status_name'])) {
+        $status = $row['status_name'];
+    }
+    return $status;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
@@ -186,7 +192,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
 $mysqli->close();
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -199,442 +204,477 @@ $mysqli->close();
 </head>
 
 <body>
-    <div class="container mt-5 text-center">
-        <h1 class="mb-3">Outgoing Calls Statistics</h1>
+    <div class="container mt-5">
+        <h3 class="mb-3">Outgoing Calls Statistics</h3>
+        <hr>
 
         <form method="get" class="mb-3">
             <div class="row">
-                <div class="col-md-3 mb-3">
-                    <label for="from_date">From:</label>
-                    <input type="date" name="from_date" id="from_date" class="form-control" value="<?php echo $fromDate; ?>">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="to_date">To:</label>
-                    <input type="date" name="to_date" id="to_date" class="form-control" value="<?php echo $toDate; ?>">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="from_time">From Time:</label>
-                    <input type="text" name="from_time" id="from_time" class="form-control" placeholder="00:00:00" value="<?php echo isset($_GET['from_time']) ? $_GET['from_time'] : '00:00:00'; ?>">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="to_time">To Time:</label>
-                    <input type="text" name="to_time" id="to_time" class="form-control" placeholder="23:59:59" value="<?php echo isset($_GET['to_time']) ? $_GET['to_time'] : '23:59:59'; ?>">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="campaign">Campaign:</label>
-                    <select name="campaign" id="campaign" class="form-select">
-                        <?php echo $campaignOptions; ?>
-                    </select>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="chart_type">Chart Type:</label>
-                    <select name="chart_type" id="chart_type" class="form-select">
-                        <option value="pie" <?php if ($chartType === 'pie')
-                                                echo 'selected'; ?>>Pie Chart</option>
-                        <option value="bar" <?php if ($chartType === 'bar')
-                                                echo 'selected'; ?>>Bar Chart</option>
-                    </select>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="data_type">Data Type:</label>
-                    <select name="data_type" id="data_type" class="form-select">
-                        <option value="call_status" <?php if ($dataType === 'call_status')
-                                                        echo 'selected'; ?>>Call Status
-                            Breakdown</option>
-                        <option value="user_calls" <?php if ($dataType === 'user_calls')
-                                                        echo 'selected'; ?>>User Total
-                            Calls</option>
-                        <option value="total_calls" <?php if ($dataType === 'total_calls')
-                                                        echo 'selected'; ?>>Total Calls
-                        </option>
-                        <option value="all" <?php if ($dataType === 'all')
-                                                echo 'selected'; ?>>All</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3 text-md-end">
-                    <button type="submit" class="btn btn-primary mt-2">Apply Filter</button>
-                </div>
+                <fieldset class="col-md-6 border border-1 p-3 bg-light">
+                    <legend>From</legend>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <input type="date" name="from_date" id="from_date" class="form-control"
+                                value="<?php echo $fromDate; ?>">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <input type="text" name="from_time" id="from_time" class="form-control"
+                                placeholder="00:00:00"
+                                value="<?php echo isset($_GET['from_time']) ? $_GET['from_time'] : '00:00:00'; ?>">
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-md-6 border border-1 p-3 bg-light">
+                    <legend>To</legend>
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <input type="date" name="to_date" id="to_date" class="form-control"
+                                value="<?php echo $toDate; ?>">
+                        </div>
+                        <div class="col-md-6 mb-3">
+
+                            <input type="text" name="to_time" id="to_time" class="form-control" placeholder="23:59:59"
+                                value="<?php echo isset($_GET['to_time']) ? $_GET['to_time'] : '23:59:59'; ?>">
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset class="col-md-12 mt-3 border border-1 p-3 bg-light">
+                    <div class="row">
+
+                        <div class="col-md-3 mb-3">
+                            <label for="campaign">Campaign:</label>
+                            <select name="campaign" id="campaign" class="form-select">
+                                <?php echo $campaignOptions; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="chart_type">Chart Type:</label>
+                            <select name="chart_type" id="chart_type" class="form-select">
+                                <option value="pie" <?php if ($chartType === 'pie')
+                                    echo 'selected'; ?>>Pie Chart</option>
+                                <option value="bar" <?php if ($chartType === 'bar')
+                                    echo 'selected'; ?>>Bar Chart</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="data_type">Data Type:</label>
+                            <select name="data_type" id="data_type" class="form-select">
+                                <option value="call_status" <?php if ($dataType === 'call_status')
+                                    echo 'selected'; ?>>Call Status
+                                    Breakdown</option>
+                                <option value="user_calls" <?php if ($dataType === 'user_calls')
+                                    echo 'selected'; ?>>User Total
+                                    Calls</option>
+                                <option value="total_calls" <?php if ($dataType === 'total_calls')
+                                    echo 'selected'; ?>>Total Calls
+                                </option>
+                                <option value="all" <?php if ($dataType === 'all')
+                                    echo 'selected'; ?>>All</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary mt-4">Apply Filter</button>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
         </form>
 
-    </div>
-
-    <div id="sectionsContainer">
-        <?php
-        // // Check the selected data type and display the corresponding section
-        // if ($dataType === 'call_status' || $dataType === 'all') {
-        //     echo '<h2 id="callStatusTitle" class="text-center mb-4" style="cursor: pointer; text-decoration: underline;">Call Status Breakdown</h2>';
-        //     echo '<table class="table table-bordered" id="callStatusContent">';
-        //     echo '<thead>';
-        //     echo '<tr>';
-        //     echo '<th>Status</th>';
-        //     echo '<th>Count</th>';
-        //     echo '</tr>';
-        //     echo '</thead>';
-        //     echo '<tbody>';
-        //     foreach ($statusData as $data) {
-        //         $status = $data['status'];
-        //         $statusName = $data['status_name'];
-        //         $count = $data['count'];
-        //         $displayStatus = "$status -> $statusName";
-        //         $displayStatus = rtrim($displayStatus, ' ->');
-        //         echo "<tr><td>$displayStatus</td><td>$count</td></tr>";
-        //     }
-        //     echo '</tbody>';
-        //     echo '</table>';
-        // }
-
-        if ($dataType === 'user_calls' || $dataType === 'all') {
-            echo '<h2 id="userCallsTitle" class="text-center mb-4" style="cursor: pointer; text-decoration: underline;">User Calls Count</h2>';
-            echo '<table class="table table-bordered" id="userCallsContent">';
-            echo '<thead>';
-            echo '<tr>';
-            echo '<th>User</th>';
 
 
-            $uniqueStatusNames = array_unique(array_column($statusData, 'status_name'));
-            foreach ($uniqueStatusNames as $statusName) {
-                echo "<th>$statusName</th>";
-            }
+        <!-- JavaScript to generate Plotly charts for "Call Status Breakdown" -->
+        <div class="row">
+            <div id="statusChart" class="mt-3"></div>
+            <div id="userTotalCallsChart" class="mt-3"></div>
+            <div id="allChart" class="mt-3"></div>
+            <div id="totalCallsChart" class="mt-3"></div>
+        </div>
 
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-
-            foreach ($userTotalCallsData as $user => $statuses) {
-                echo "<tr><td>$user</td>";
-
-                // Initialize an array to store counts for each status_name
-                $statusCounts = array_fill_keys($uniqueStatusNames, 0);
-
-                foreach ($statuses as $status) {
-                    // Increment the count for the corresponding status_name
-                    $statusCounts[$status['status_name']] += $status['user_total_calls'];
-                }
-
-                // Display the counts for each status_name
-                foreach ($uniqueStatusNames as $statusName) {
-                    echo "<td>{$statusCounts[$statusName]}</td>";
-                }
-
-                echo '</tr>';
-            }
-
-            echo '</tbody>';
-            echo '</table>';
-        }
-        if ($dataType === 'total_calls' || $dataType === 'all') {
-            echo '<h2 id="dataTypeTitle" class="text-center mb-4" style="cursor: pointer; text-decoration: underline;">Total Calls</h2>';
-            echo '<table class="table table-bordered" id="dataTypeContent">';
-            echo '<thead>';
-            echo '<tr>';
-            echo '<th>Data Type</th>';
-            echo '<th>Total</th>';
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-            echo '<tr>';
-            echo '<td>Answered Calls</td>';
-            echo '<td>';
-            echo '<span id="answeredCalls">';
-            echo $answeredCallsData['answered_calls'];
-            echo '</span>';
-            echo '</td>';
-            echo '</tr>';
-            echo '<tr>';
-            echo '<td>Drop / Timeout Calls</td>';
-            echo '<td>';
-            echo '<span id="abandonedCalls">';
-            echo $abandonedCallsData['abandoned_calls'];
-            echo '</span>';
-            echo '</td>';
-            echo '</tr>';
-            echo '<tr>';
-            echo '<td>Total Calls</td>';
-            echo '<td>';
-            echo '<span id="userTotalCalls">';
-            echo ($answeredCallsData['answered_calls'] + $abandonedCallsData['abandoned_calls']);
-            echo '</span>';
-            echo '</td>';
-            echo '</tr>';
-            echo '</tbody>';
-            echo '</table>';
-        }
-        ?>
-    </div>
-    <!-- </div> -->
-
-    <!-- Add JavaScript to toggle the visibility of the content -->
-    <script>
-        function toggleVisibility(contentId) {
-            var content = document.getElementById(contentId);
-
-            if (content.style.display === 'none' || content.style.display === '') {
-                content.style.display = 'table';
-            } else {
-                content.style.display = 'none';
-            }
-        }
-
-        // Add click event handlers to the titles
-        document.getElementById('userCallsTitle').addEventListener('click', function() {
-            toggleVisibility('userCallsContent');
-        });
-
-        document.getElementById('callStatusTitle').addEventListener('click', function() {
-            toggleVisibility('callStatusContent');
-        });
-
-        document.getElementById('dataTypeTitle').addEventListener('click', function() {
-            toggleVisibility('dataTypeContent');
-        });
-    </script>
-
-    <!-- JavaScript to generate Plotly charts for "Call Status Breakdown" -->
-
-    <div id="statusChart" class="mt-3"></div>
-    <div id="userTotalCallsChart" class="mt-3"></div>
-    <div id="allChart" class="mt-3"></div>
-    <div id="totalCallsChart" class="mt-3"></div>
-    <!-- Add JavaScript to generate Plotly charts for "Call Status Breakdown" -->
-    <?php if ($dataType === 'call_status' || $dataType === 'all') { ?>
-        <script>
-            var statusCategories = <?php echo json_encode(array_column($statusData, 'status')); ?>;
-            var statusCounts = <?php echo json_encode(array_column($statusData, 'count')); ?>;
-            var chartType = '<?php echo $chartType; ?>';
-
-            // Convert statusCounts to numbers
-            statusCounts = statusCounts.map(count => parseInt(count, 10));
-
-            // Calculate percentages
-            var totalStatusCount = statusCounts.reduce((a, b) => a + b, 0);
-            var percentages = statusCounts.map(count => ((count / totalStatusCount) * 100).toFixed(2) + '%');
-
-            // Create labels with both status and value
-            var statusLabels = statusCategories.map((status, index) => status + ' (' + statusCounts[index] + ', ' + percentages[index] + ')');
-
-            // Chart title and labels
-            // var statusTitle = "Call Status Breakdown";
-            var statusXAxisLabel = "Status";
-            var statusYAxisLabel = "Count";
-
-            // Create the appropriate chart based on the selected chart type and data type
-            if (chartType === 'bar') {
-                var statusDataForChart = [{
-                    x: statusCategories,
-                    y: statusCounts,
-                    type: 'bar'
-                }];
-                var statusLayout = {
-                    title: statusTitle,
-                    xaxis: {
-                        title: statusXAxisLabel
-                    },
-                    yaxis: {
-                        title: statusYAxisLabel
-                    }
-                };
-                Plotly.newPlot('statusChart', statusDataForChart, statusLayout);
-            } else if (chartType === 'pie') {
-                var statusDataForChart = [{
-                    labels: statusCategories,
-                    values: statusCounts,
-                    type: 'pie'
-                }];
-                var statusLayout = {
-                    title: statusTitle
-                };
-                Plotly.newPlot('statusChart', statusDataForChart, statusLayout);
-            }
-
-            // Add click event handler to the "Call Status Breakdown" chart
-            // document.getElementById('statusChart').on('plotly_click', function(data) {
-            //     // Check if a point on the chart was clicked
-            //     if (data.points.length > 0) {
-            //         // Extract the selected status ID from the clicked point
-
-            //         var selectedStatusId = statusCategories[data.points[0].pointNumber];
-            //         var fromDate = document.getElementById('from_date').value; // Assuming you have an element with id 'from_date'
-            //         var toDate = document.getElementById('to_date').value; // Assuming you have an element with id 'to_date'
-            //         var fromTime = document.getElementById('from_time').value; // Assuming you have an element with id 'from_time'
-            //         var toTime = document.getElementById('to_time').value; // Assuming you have an element with id 'to_time'
-
-            //         // Open the popup with the selected status ID, date, and time using GET
-            //         var popupURL = 'ogpopup_status.php?status_id=' + encodeURIComponent(selectedStatusId) +
-            //             '&from_date=' + encodeURIComponent(fromDate) +
-            //             '&to_date=' + encodeURIComponent(toDate) +
-            //             '&from_time=' + encodeURIComponent(fromTime) +
-            //             '&to_time=' + encodeURIComponent(toTime);
-
-            //         window.open(popupURL, '_blank', 'width=800, height=600');
+        <div id="sectionsContainer">
+            <?php
+            // // Check the selected data type and display the corresponding section
+            // if ($dataType === 'call_status' || $dataType === 'all') {
+            //     echo '<h2 id="callStatusTitle" class="text-center mb-4" style="cursor: pointer; text-decoration: underline;">Call Status Breakdown</h2>';
+            //     echo '<table class="table table-bordered" id="callStatusContent">';
+            //     echo '<thead>';
+            //     echo '<tr>';
+            //     echo '<th>Status</th>';
+            //     echo '<th>Count</th>';
+            //     echo '</tr>';
+            //     echo '</thead>';
+            //     echo '<tbody>';
+            //     foreach ($statusData as $data) {
+            //         $status = $data['status'];
+            //         $statusName = $data['status_name'];
+            //         $count = $data['count'];
+            //         $displayStatus = "$status -> $statusName";
+            //         $displayStatus = rtrim($displayStatus, ' ->');
+            //         echo "<tr><td>$displayStatus</td><td>$count</td></tr>";
             //     }
-            // });
-        </script>
-    <?php } ?>
-
-
-
-    <?php if ($dataType === 'user_calls' || $dataType === 'all') { ?>
-        
-        <!-- JavaScript to generate Plotly charts for "User Total Calls" -->
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
-<!-- JavaScript to generate Plotly charts for "User Total Call Status Breakdown" -->
-<script>
-    window.addEventListener('load', function () {
-        var userCategories = <?php echo json_encode(array_keys($userTotalCallsData)); ?>;
-        var uniqueStatusNames = <?php echo json_encode($uniqueStatusNames); ?>;
-        var chartType = '<?php echo $chartType; ?>';
-        var selectedUser = ''; // Initialize selectedUser
-
-        // Function to update the chart based on the selected user
-        function updateChart() {
-            var userCounts = selectedUser ? <?php echo json_encode($userTotalCallsData[$selectedUser]); ?> : <?php echo json_encode(array_values($userTotalCallsData)[0]); ?>;
+            //     echo '</tbody>';
+            //     echo '</table>';
+            // }
             
-            // Transform userCounts to match the structure expected by Plotly
-            var transformedUserCounts = userCounts.map(status => status['user_total_calls']);
+            if ($dataType === 'user_calls' || $dataType === 'all') { ?>
+                <h2 id="userCallsTitle" class="text-center mb-4">User Calls
+                    Count</h2>
+                <table class="table table-striped" id="userCallsContent">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <?php
+                            $uniqueStatusNames = array_unique(array_column($statusData, 'status_name'));
+                            sort($uniqueStatusNames);
+                            foreach ($uniqueStatusNames as $statusName) {
+                                echo "<th>$statusName</th>";
+                            }
+                            ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($userTotalCallsData as $user => $statuses) {
+                            echo "<tr><td>$user</td>";
 
-            // Chart title and labels
-            var userTitle = selectedUser ? "User " + selectedUser + " Call Status Breakdown" : "Default User Call Status Breakdown";
-            var userXAxisLabel = "Status";
-            var userYAxisLabel = "Count";
+                            // Initialize an array to store counts for each status_name
+                            $statusCounts = array_fill_keys($uniqueStatusNames, 0);
 
-            var userLabels = uniqueStatusNames.map((statusName, index) => statusName + ' (' + userCounts[index]['user_total_calls'] + ')');
+                            foreach ($statuses as $status) {
+                                // Increment the count for the corresponding status_name
+                                if (isset($status['user_total_calls'])) {
+                                    $user_total_calls = $status['user_total_calls'];
+                                    $statusName = $status['status_name'];
+                                    if (isset($statusCounts[$statusName])) {
+                                        $statusCounts[$statusName] += $user_total_calls;
+                                    } else {
+                                        $statusCounts[$statusName] = $user_total_calls;
+                                    }
+                                    // Increment the count for the corresponding status_name
+                                    // $statusCounts[$status['status_name']] += $user_total_calls;
+                                }
+                                // $statusCounts[$status['status_name']] += $status['user_total_calls'];
+                            }
 
-            // Create the appropriate chart based on the selected chart type and user
-            if (chartType === 'bar') {
-                var userData = [{
-                    x: userLabels,
-                    y: transformedUserCounts,
-                    type: 'bar'
-                }];
-                var userLayout = {
-                    title: userTitle,
-                    xaxis: {
-                        title: userXAxisLabel
-                    },
-                    yaxis: {
-                        title: userYAxisLabel
-                    }
-                };
-                Plotly.newPlot('userTotalCallsChart', userData, userLayout);
-            } else if (chartType === 'pie') {
-                var userChartData = [{
-                    labels: userLabels,
-                    values: transformedUserCounts,
-                    type: 'pie'
-                }];
-                var userChartLayout = {
-                    title: userTitle
-                };
-                Plotly.newPlot('userTotalCallsChart', userChartData, userChartLayout);
-            }
-        }
+                            // Display the counts for each status_name
+                            foreach ($uniqueStatusNames as $statusName) { ?>
+                                <td><?php echo $statusCounts[$statusName] == '0' ? '-' : $statusCounts[$statusName]; ?></td>
+                            <?php }
 
-        // Initial chart rendering
-        updateChart();
+                            echo '</tr>';
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            <?php } ?>
+            <?php
+            if ($dataType === 'total_calls' || $dataType === 'all') { ?>
+                <h2 id="dataTypeTitle" class="text-center mb-4" style="cursor: pointer; text-decoration: underline;">Total
+                    Calls
+                </h2>
+                <table class="table table-bordered" id="dataTypeContent">
+                    <thead>
+                        <tr>
+                            <th>Data Type</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Answered Calls</td>
+                            <td>
+                                <span id="answeredCalls">
+                                    <?php echo $answeredCallsData['answered_calls']; ?>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Drop / Timeout Calls</td>
+                            <td>
+                                <span id="abandonedCalls">
+                                    <?php echo $abandonedCallsData['abandoned_calls']; ?>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total Calls</td>
+                            <td>
+                                <span id="userTotalCalls">
+                                    <?php echo ($answeredCallsData['answered_calls'] + $abandonedCallsData['abandoned_calls']); ?>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            <?php } ?>
+        </div>
+        <!-- </div> -->
 
-        // Add click event handler to the "User Total Call Status Breakdown" chart
-        document.getElementById('userTotalCallsChart').on('plotly_click', function (data) {
-            // Check if a point on the chart was clicked
-            if (data.points.length > 0) {
-                // Extract the selected user from the clicked point
-                selectedUser = userCategories[data.points[0].pointNumber];
-                // Update the chart based on the selected user
-                updateChart();
-            }
-        });
-    });
-</script>
-    <?php } ?>
-
-
-
-
-
-
-    <?php if ($dataType === 'total_calls' || $dataType === 'all') { ?>
-
-        <!-- JavaScript to generate Plotly charts for "Total Calls" -->
+        <!-- Add JavaScript to toggle the visibility of the content -->
         <script>
-            var totalCallsCategories = ['Answered Calls', 'Drop / Timeout Calls', 'Total Calls'];
-            var totalCallsCounts = [
-                <?php echo $answeredCallsData['answered_calls']; ?>,
-                <?php echo $abandonedCallsData['abandoned_calls']; ?>,
-                <?php echo ($answeredCallsData['answered_calls'] + $abandonedCallsData['abandoned_calls']); ?>
-            ];
-            var chartType = '<?php echo $chartType; ?>';
+            function toggleVisibility(contentId) {
+                var content = document.getElementById(contentId);
 
-            // Chart title and labels
-            var totalCallsTitle = "Total Calls";
-            var totalCallsXAxisLabel = "Category";
-            var totalCallsYAxisLabel = "Count";
-
-            // Create labels with both category, value, and percentage
-            var totalCallsLabels = totalCallsCategories.map((category, index) => category + ' (' + totalCallsCounts[index] + ')');
-
-            // Create the appropriate chart based on the selected chart type and data type
-            if (chartType === 'bar') {
-                var totalCallsData = [{
-                    x: totalCallsLabels,
-                    y: totalCallsCounts,
-                    type: 'bar'
-                }];
-                var totalCallsLayout = {
-                    title: totalCallsTitle,
-                    xaxis: {
-                        title: totalCallsXAxisLabel
-                    },
-                    yaxis: {
-                        title: totalCallsYAxisLabel
-                    }
-                };
-                Plotly.newPlot('totalCallsChart', totalCallsData, totalCallsLayout);
-            } else if (chartType === 'pie') {
-                var totalCallsData = [{
-                    labels: totalCallsLabels,
-                    values: totalCallsCounts,
-                    type: 'pie'
-                }];
-                var totalCallsLayout = {
-                    title: totalCallsTitle
-                };
-                Plotly.newPlot('totalCallsChart', totalCallsData, totalCallsLayout);
+                if (content.style.display === 'none' || content.style.display === '') {
+                    content.style.display = 'table';
+                } else {
+                    content.style.display = 'none';
+                }
             }
 
-            // Add click event handler to the "Total Calls" chart
-            document.getElementById('totalCallsChart').on('plotly_click', function(data) {
-                // Check if a point on the chart was clicked
-                if (data.points.length > 0) {
-                    // Extract the selected category, fromDate, and toDate from the clicked point
-                    var selectedCategory = totalCallsCategories[data.points[0].pointNumber];
-                    var fromDate = document.getElementById('from_date').value; // Assuming you have an element with id 'from_date'
-                    var toDate = document.getElementById('to_date').value; // Assuming you have an element with id 'to_date'
-                    var fromTime = document.getElementById('from_time').value; // Assuming you have an element with id 'from_time'
-                    var toTime = document.getElementById('to_time').value; // Assuming you have an element with id 'to_time'
+            // Add click event handlers to the titles
+            document.getElementById('userCallsTitle').addEventListener('click', function () {
+                toggleVisibility('userCallsContent');
+            });
 
-                    // Log the values for debugging
-                    console.log("Selected Category:", selectedCategory);
-                    console.log("From Date:", fromDate);
-                    console.log("To Date:", toDate);
-                    console.log("From Time:", fromTime);
-                    console.log("To Time:", toTime);
+            document.getElementById('callStatusTitle').addEventListener('click', function () {
+                toggleVisibility('callStatusContent');
+            });
 
-                    // Open the popup with the selected category, fromDate, and toDate using GET
-                    var popupURL = 'ogpopup_totalcalls.php?category=' + encodeURIComponent(selectedCategory) +
-                        '&from_date=' + encodeURIComponent(fromDate) +
-                        '&to_date=' + encodeURIComponent(toDate) +
-                        '&from_time=' + encodeURIComponent(fromTime) +
-                        '&to_time=' + encodeURIComponent(toTime);
-
-                    window.open(popupURL, '_blank', 'width=800, height=600');
-                }
+            document.getElementById('dataTypeTitle').addEventListener('click', function () {
+                toggleVisibility('dataTypeContent');
             });
         </script>
 
-    <?php } ?>
+        <!-- Add JavaScript to generate Plotly charts for "Call Status Breakdown" -->
+        <?php if ($dataType === 'call_status' || $dataType === 'all') { ?>
+            <script>
+                var statusCategories = <?php echo json_encode(array_column($statusData, 'status')); ?>;
+                var statusCounts = <?php echo json_encode(array_column($statusData, 'count')); ?>;
+                var chartType = '<?php echo $chartType; ?>';
+
+                // Convert statusCounts to numbers
+                statusCounts = statusCounts.map(count => parseInt(count, 10));
+
+                // Calculate percentages
+                var totalStatusCount = statusCounts.reduce((a, b) => a + b, 0);
+                var percentages = statusCounts.map(count => ((count / totalStatusCount) * 100).toFixed(2) + '%');
+
+                // Create labels with both status and value
+                var statusLabels = statusCategories.map((status, index) => status + ' (' + statusCounts[index] + ', ' + percentages[index] + ')');
+
+                // Chart title and labels
+                // var statusTitle = "Call Status Breakdown";
+                var statusXAxisLabel = "Status";
+                var statusYAxisLabel = "Count";
+
+                // Create the appropriate chart based on the selected chart type and data type
+                if (chartType === 'bar') {
+                    var statusDataForChart = [{
+                        x: statusCategories,
+                        y: statusCounts,
+                        type: 'bar'
+                    }];
+                    var statusLayout = {
+                        title: statusTitle,
+                        xaxis: {
+                            title: statusXAxisLabel
+                        },
+                        yaxis: {
+                            title: statusYAxisLabel
+                        }
+                    };
+                    Plotly.newPlot('statusChart', statusDataForChart, statusLayout);
+                } else if (chartType === 'pie') {
+                    var statusDataForChart = [{
+                        labels: statusCategories,
+                        values: statusCounts,
+                        type: 'pie'
+                    }];
+                    var statusLayout = {
+                        title: statusTitle
+                    };
+                    Plotly.newPlot('statusChart', statusDataForChart, statusLayout);
+                }
+
+                // Add click event handler to the "Call Status Breakdown" chart
+                // document.getElementById('statusChart').on('plotly_click', function(data) {
+                //     // Check if a point on the chart was clicked
+                //     if (data.points.length > 0) {
+                //         // Extract the selected status ID from the clicked point
+
+                //         var selectedStatusId = statusCategories[data.points[0].pointNumber];
+                //         var fromDate = document.getElementById('from_date').value; // Assuming you have an element with id 'from_date'
+                //         var toDate = document.getElementById('to_date').value; // Assuming you have an element with id 'to_date'
+                //         var fromTime = document.getElementById('from_time').value; // Assuming you have an element with id 'from_time'
+                //         var toTime = document.getElementById('to_time').value; // Assuming you have an element with id 'to_time'
+
+                //         // Open the popup with the selected status ID, date, and time using GET
+                //         var popupURL = 'ogpopup_status.php?status_id=' + encodeURIComponent(selectedStatusId) +
+                //             '&from_date=' + encodeURIComponent(fromDate) +
+                //             '&to_date=' + encodeURIComponent(toDate) +
+                //             '&from_time=' + encodeURIComponent(fromTime) +
+                //             '&to_time=' + encodeURIComponent(toTime);
+
+                //         window.open(popupURL, '_blank', 'width=800, height=600');
+                //     }
+                // });
+            </script>
+        <?php } ?>
+
+
+
+        <?php if ($dataType === 'user_calls' || $dataType === 'all') { ?>
+
+            <!-- JavaScript to generate Plotly charts for "User Total Calls" -->
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+            <!-- JavaScript to generate Plotly charts for "User Total Call Status Breakdown" -->
+            <script>
+                window.addEventListener('load', function () {
+                    var userCategories = <?php echo json_encode(array_keys($userTotalCallsData)); ?>;
+                    var uniqueStatusNames = <?php echo json_encode($uniqueStatusNames); ?>;
+                    var chartType = '<?php echo $chartType; ?>';
+                    var selectedUser = ''; // Initialize selectedUser
+
+                    // Function to update the chart based on the selected user
+                    function updateChart() {
+                        var userCounts = selectedUser ? <?php echo json_encode($userTotalCallsData[$selectedUser]); ?> : <?php echo json_encode(array_values($userTotalCallsData)[0]); ?>;
+                        // Transform userCounts to match the structure expected by Plotly
+                        var transformedUserCounts = userCounts.map(status => status['user_total_calls']);
+
+                        // Chart title and labels
+                        var userTitle = selectedUser ? "User " + selectedUser + " Call Status Breakdown" : "Default User Call Status Breakdown";
+                        var userXAxisLabel = "Status";
+                        var userYAxisLabel = "Count";
+
+                        var userLabels = uniqueStatusNames.map((statusName, index) => statusName + ' (' + userCounts[index]['user_total_calls'] + ')');
+
+                        // Create the appropriate chart based on the selected chart type and user
+                        if (chartType === 'bar') {
+                            var userData = [{
+                                x: userLabels,
+                                y: transformedUserCounts,
+                                type: 'bar'
+                            }];
+                            var userLayout = {
+                                title: userTitle,
+                                xaxis: {
+                                    title: userXAxisLabel
+                                },
+                                yaxis: {
+                                    title: userYAxisLabel
+                                }
+                            };
+                            Plotly.newPlot('userTotalCallsChart', userData, userLayout);
+                        } else if (chartType === 'pie') {
+                            var userChartData = [{
+                                labels: userLabels,
+                                values: transformedUserCounts,
+                                type: 'pie'
+                            }];
+                            var userChartLayout = {
+                                title: userTitle
+                            };
+                            Plotly.newPlot('userTotalCallsChart', userChartData, userChartLayout);
+                        }
+                    }
+
+                    // Initial chart rendering
+                    updateChart();
+
+                    // Add click event handler to the "User Total Call Status Breakdown" chart
+                    document.getElementById('userTotalCallsChart').on('plotly_click', function (data) {
+                        // Check if a point on the chart was clicked
+                        if (data.points.length > 0) {
+                            // Extract the selected user from the clicked point
+                            selectedUser = userCategories[data.points[0].pointNumber];
+                            // Update the chart based on the selected user
+                            updateChart();
+                        }
+                    });
+                });
+            </script>
+        <?php } ?>
+
+
+
+
+
+
+        <?php if ($dataType === 'total_calls' || $dataType === 'all') { ?>
+
+            <!-- JavaScript to generate Plotly charts for "Total Calls" -->
+            <script>
+                var totalCallsCategories = ['Answered Calls', 'Drop / Timeout Calls', 'Total Calls'];
+                var totalCallsCounts = [
+                    <?php echo $answeredCallsData['answered_calls']; ?>,
+                    <?php echo $abandonedCallsData['abandoned_calls']; ?>,
+                    <?php echo ($answeredCallsData['answered_calls'] + $abandonedCallsData['abandoned_calls']); ?>
+                ];
+                var chartType = '<?php echo $chartType; ?>';
+
+                // Chart title and labels
+                var totalCallsTitle = "Total Calls";
+                var totalCallsXAxisLabel = "Category";
+                var totalCallsYAxisLabel = "Count";
+
+                // Create labels with both category, value, and percentage
+                var totalCallsLabels = totalCallsCategories.map((category, index) => category + ' (' + totalCallsCounts[index] + ')');
+
+                // Create the appropriate chart based on the selected chart type and data type
+                if (chartType === 'bar') {
+                    var totalCallsData = [{
+                        x: totalCallsLabels,
+                        y: totalCallsCounts,
+                        type: 'bar'
+                    }];
+                    var totalCallsLayout = {
+                        title: totalCallsTitle,
+                        xaxis: {
+                            title: totalCallsXAxisLabel
+                        },
+                        yaxis: {
+                            title: totalCallsYAxisLabel
+                        }
+                    };
+                    Plotly.newPlot('totalCallsChart', totalCallsData, totalCallsLayout);
+                } else if (chartType === 'pie') {
+                    var totalCallsData = [{
+                        labels: totalCallsLabels,
+                        values: totalCallsCounts,
+                        type: 'pie'
+                    }];
+                    var totalCallsLayout = {
+                        title: totalCallsTitle
+                    };
+                    Plotly.newPlot('totalCallsChart', totalCallsData, totalCallsLayout);
+                }
+
+                // Add click event handler to the "Total Calls" chart
+                document.getElementById('totalCallsChart').on('plotly_click', function (data) {
+                    // Check if a point on the chart was clicked
+                    if (data.points.length > 0) {
+                        // Extract the selected category, fromDate, and toDate from the clicked point
+                        var selectedCategory = totalCallsCategories[data.points[0].pointNumber];
+                        var fromDate = document.getElementById('from_date').value; // Assuming you have an element with id 'from_date'
+                        var toDate = document.getElementById('to_date').value; // Assuming you have an element with id 'to_date'
+                        var fromTime = document.getElementById('from_time').value; // Assuming you have an element with id 'from_time'
+                        var toTime = document.getElementById('to_time').value; // Assuming you have an element with id 'to_time'
+
+                        // Log the values for debugging
+                        console.log("Selected Category:", selectedCategory);
+                        console.log("From Date:", fromDate);
+                        console.log("To Date:", toDate);
+                        console.log("From Time:", fromTime);
+                        console.log("To Time:", toTime);
+
+                        // Open the popup with the selected category, fromDate, and toDate using GET
+                        var popupURL = 'ogpopup_totalcalls.php?category=' + encodeURIComponent(selectedCategory) +
+                            '&from_date=' + encodeURIComponent(fromDate) +
+                            '&to_date=' + encodeURIComponent(toDate) +
+                            '&from_time=' + encodeURIComponent(fromTime) +
+                            '&to_time=' + encodeURIComponent(toTime);
+
+                        window.open(popupURL, '_blank', 'width=800, height=600');
+                    }
+                });
+            </script>
+
+        <?php } ?>
 
     </div>
 </body>
